@@ -18,14 +18,14 @@ public class FileManagerPutTest extends FileManagerTestBase {
 
 	@Test
 	void test_put_ok_nomock() throws IOException, URISyntaxException {
-		new FileManager(s3client, BUCKET).put("log4j.xml", toPath("/log4j2.xml"));
+		new FileManager(s3client, BUCKET).put("log4j.xml", toResourcePath("/log4j2.xml"));
 	}
 
 	@Test
 	void test_put_ok_mock() throws IOException, URISyntaxException {
 		when(s3clientMock.putObject((PutObjectRequest) any(), (RequestBody) any())).thenReturn(responseMock);
 
-		new FileManager(s3clientMock, BUCKET).put("log4j2a.xml", toPath("/log4j2.xml"));
+		new FileManager(s3clientMock, BUCKET).put("log4j2a.xml", toResourcePath("/log4j2.xml"));
 	}
 
 	@Test
@@ -34,7 +34,7 @@ public class FileManagerPutTest extends FileManagerTestBase {
 				.thenThrow(NoSuchKeyException.builder().build());
 
 		assertThatThrownBy(() -> {
-			new FileManager(s3clientMock, BUCKET).put("log4j2a.xml", toPath("/log4j2.xml"));
+			new FileManager(s3clientMock, BUCKET).put("log4j2a.xml", toResourcePath("/log4j2.xml"));
 		}).isInstanceOfSatisfying(NoSuchKeyException.class, e -> {
 			assertThat(e.getMessage()).isBlank();
 		});
